@@ -1,5 +1,6 @@
 local library = {}
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
 function play(id)
     for _, v in next, workspace:GetChildren() do
@@ -723,6 +724,141 @@ function library:CreateWindow(name, theme)
                 pcall(callback)
                 play("rbxassetid://6895079853")
             end)
+        end
+        
+        function InsideTab:CreateKeybind(text, defaultKey, callback)
+            callback = callback or function() end
+            defaultKey = defaultKey or Enum.KeyCode.E
+            
+            local KeybindFrame = Instance.new("Frame")
+            local KeybindCorner = Instance.new("UICorner")
+            local KeybindLabel = Instance.new("TextLabel")
+            local KeybindButton = Instance.new("TextButton")
+            local KeybindBtnCorner = Instance.new("UICorner")
+            
+            KeybindFrame.Parent = TabPage
+            KeybindFrame.BackgroundColor3 = theme1
+            KeybindFrame.BorderSizePixel = 0
+            KeybindFrame.Size = UDim2.new(1, -10, 0, 40)
+            
+            KeybindCorner.CornerRadius = UDim.new(0, 5)
+            KeybindCorner.Parent = KeybindFrame
+            
+            -- Hover effect
+            KeybindFrame.MouseEnter:Connect(function()
+                TweenService:Create(KeybindFrame, TweenInfo.new(0.2), {
+                    BackgroundColor3 = Color3.fromRGB(theme1.R * 255 * 1.15, theme1.G * 255 * 1.15, theme1.B * 255 * 1.15)
+                }):Play()
+            end)
+            
+            KeybindFrame.MouseLeave:Connect(function()
+                TweenService:Create(KeybindFrame, TweenInfo.new(0.2), {BackgroundColor3 = theme1}):Play()
+            end)
+            
+            KeybindLabel.Parent = KeybindFrame
+            KeybindLabel.BackgroundTransparency = 1
+            KeybindLabel.Position = UDim2.new(0, 12, 0, 0)
+            KeybindLabel.Size = UDim2.new(1, -100, 1, 0)
+            KeybindLabel.Font = Enum.Font.Gotham
+            KeybindLabel.Text = text
+            KeybindLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            KeybindLabel.TextSize = 13
+            KeybindLabel.TextXAlignment = Enum.TextXAlignment.Left
+            
+            KeybindButton.Parent = KeybindFrame
+            KeybindButton.BackgroundColor3 = theme2
+            KeybindButton.BorderSizePixel = 0
+            KeybindButton.Position = UDim2.new(1, -80, 0.5, -12)
+            KeybindButton.Size = UDim2.new(0, 70, 0, 24)
+            KeybindButton.Font = Enum.Font.GothamBold
+            KeybindButton.Text = defaultKey.Name
+            KeybindButton.TextColor3 = theme3
+            KeybindButton.TextSize = 12
+            KeybindButton.AutoButtonColor = false
+            
+            KeybindBtnCorner.CornerRadius = UDim.new(0, 4)
+            KeybindBtnCorner.Parent = KeybindButton
+            
+            local currentKey = defaultKey
+            local listening = false
+            
+            -- Keybind button hover
+            KeybindButton.MouseEnter:Connect(function()
+                if not listening then
+                    TweenService:Create(KeybindButton, TweenInfo.new(0.2), {
+                        BackgroundColor3 = Color3.fromRGB(theme2.R * 255 * 1.2, theme2.G * 255 * 1.2, theme2.B * 255 * 1.2)
+                    }):Play()
+                end
+            end)
+            
+            KeybindButton.MouseLeave:Connect(function()
+                if not listening then
+                    TweenService:Create(KeybindButton, TweenInfo.new(0.2), {BackgroundColor3 = theme2}):Play()
+                end
+            end)
+            
+            -- Click to change keybind
+            KeybindButton.MouseButton1Click:Connect(function()
+                if listening then return end
+                
+                listening = true
+                KeybindButton.Text = "..."
+                TweenService:Create(KeybindButton, TweenInfo.new(0.3), {
+                    BackgroundColor3 = theme3,
+                    TextColor3 = Color3.fromRGB(255, 255, 255)
+                }):Play()
+                
+                play("rbxassetid://6895079853")
+                
+                local connection
+                connection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                    if input.UserInputType == Enum.UserInputType.Keyboard then
+                        listening = false
+                        currentKey = input.KeyCode
+                        KeybindButton.Text = input.KeyCode.Name
+                        
+                        TweenService:Create(KeybindButton, TweenInfo.new(0.3), {
+                            BackgroundColor3 = theme2,
+                            TextColor3 = theme3
+                        }):Play()
+                        
+                        play("rbxassetid://6895079853")
+                        connection:Disconnect()
+                    end
+                end)
+            end)
+            
+            -- Listen for the keybind to trigger callback
+            UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                if not gameProcessed and input.KeyCode == currentKey and not listening then
+                    pcall(callback)
+                    
+                    -- Flash animation
+                    TweenService:Create(KeybindButton, TweenInfo.new(0.1), {
+                        BackgroundColor3 = theme3,
+                        TextColor3 = Color3.fromRGB(255, 255, 255),
+                        Size = UDim2.new(0, 75, 0, 26)
+                    }):Play()
+                    wait(0.1)
+                    TweenService:Create(KeybindButton, TweenInfo.new(0.2), {
+                        BackgroundColor3 = theme2,
+                        TextColor3 = theme3,
+                        Size = UDim2.new(0, 70, 0, 24)
+                    }):Play()
+                    
+                    play("rbxassetid://6895079853")
+                end
+            end)
+            
+            return {
+                SetKey = function(self, newKey)
+                    currentKey = newKey
+                    KeybindButton.Text = newKey.Name
+                end,
+                GetKey = function(self)
+                    return currentKey
+                end
+            }
         end
         
         function InsideTab:CreateSlider(text, minvalue, maxvalue, callback)
