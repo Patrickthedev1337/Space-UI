@@ -1,4 +1,5 @@
 local library = {}
+local TweenService = game:GetService("TweenService")
 
 function play(id)
     for _, v in next, workspace:GetChildren() do
@@ -23,19 +24,68 @@ function library:CreateWindow(name, theme)
         end
     end
 
-    -- Enhanced theme system with better colors
-    if theme == "Normal" then
+    -- Enhanced theme system with many more color modes
+    if theme == "Normal" or theme == "Red" then
         theme1 = Color3.fromRGB(20, 20, 20)
         theme2 = Color3.fromRGB(15, 15, 15)
         theme3 = Color3.fromRGB(200, 50, 50)
-    elseif theme == "Reverse" then
-        theme1 = Color3.fromRGB(26,26,26)
-        theme2 = Color3.fromRGB(32,32,32)
+    elseif theme == "Purple" or theme == "Reverse" then
+        theme1 = Color3.fromRGB(26, 26, 26)
+        theme2 = Color3.fromRGB(32, 32, 32)
         theme3 = Color3.fromRGB(176, 148, 255)
     elseif theme == "Blood" then
         theme1 = Color3.fromRGB(25, 20, 20)
         theme2 = Color3.fromRGB(18, 15, 15)
-        theme3 = Color3.fromRGB(138, 3, 3)
+        theme3 = Color3.fromRGB(180, 0, 0)
+    elseif theme == "Ocean" or theme == "Blue" then
+        theme1 = Color3.fromRGB(15, 20, 28)
+        theme2 = Color3.fromRGB(10, 15, 22)
+        theme3 = Color3.fromRGB(0, 162, 255)
+    elseif theme == "Emerald" or theme == "Green" then
+        theme1 = Color3.fromRGB(18, 25, 20)
+        theme2 = Color3.fromRGB(12, 18, 15)
+        theme3 = Color3.fromRGB(0, 230, 118)
+    elseif theme == "Sunset" or theme == "Orange" then
+        theme1 = Color3.fromRGB(28, 20, 18)
+        theme2 = Color3.fromRGB(22, 15, 12)
+        theme3 = Color3.fromRGB(255, 120, 60)
+    elseif theme == "Pink" or theme == "Candy" then
+        theme1 = Color3.fromRGB(25, 18, 25)
+        theme2 = Color3.fromRGB(18, 12, 18)
+        theme3 = Color3.fromRGB(255, 105, 180)
+    elseif theme == "Cyan" or theme == "Ice" then
+        theme1 = Color3.fromRGB(15, 22, 28)
+        theme2 = Color3.fromRGB(10, 16, 22)
+        theme3 = Color3.fromRGB(0, 255, 255)
+    elseif theme == "Gold" or theme == "Yellow" then
+        theme1 = Color3.fromRGB(25, 23, 15)
+        theme2 = Color3.fromRGB(18, 16, 10)
+        theme3 = Color3.fromRGB(255, 215, 0)
+    elseif theme == "Mint" then
+        theme1 = Color3.fromRGB(18, 25, 23)
+        theme2 = Color3.fromRGB(12, 18, 16)
+        theme3 = Color3.fromRGB(152, 255, 152)
+    elseif theme == "Neon" then
+        theme1 = Color3.fromRGB(12, 12, 12)
+        theme2 = Color3.fromRGB(8, 8, 8)
+        theme3 = Color3.fromRGB(0, 255, 170)
+    elseif theme == "Lavender" then
+        theme1 = Color3.fromRGB(25, 20, 30)
+        theme2 = Color3.fromRGB(18, 15, 22)
+        theme3 = Color3.fromRGB(200, 162, 255)
+    elseif theme == "Rose" then
+        theme1 = Color3.fromRGB(28, 18, 22)
+        theme2 = Color3.fromRGB(20, 12, 16)
+        theme3 = Color3.fromRGB(255, 102, 153)
+    elseif theme == "Royal" then
+        theme1 = Color3.fromRGB(20, 18, 35)
+        theme2 = Color3.fromRGB(15, 12, 25)
+        theme3 = Color3.fromRGB(123, 104, 238)
+    elseif theme == "Dark" or theme == "Midnight" then
+        theme1 = Color3.fromRGB(10, 10, 10)
+        theme2 = Color3.fromRGB(5, 5, 5)
+        theme3 = Color3.fromRGB(150, 150, 150)
+        toolight = true
     else
         theme1 = Color3.fromRGB(20, 20, 20)
         theme2 = Color3.fromRGB(15, 15, 15)
@@ -62,18 +112,26 @@ function library:CreateWindow(name, theme)
     Screen.Parent = game:WaitForChild("CoreGui")
     Screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     
-    -- Main frame
+    -- Main frame with entrance animation
     MainFrame.Name = "MainFrame"
     MainFrame.Parent = Screen
     MainFrame.BackgroundColor3 = theme1
     MainFrame.BorderSizePixel = 0
     MainFrame.Position = UDim2.new(0.5, -350, 0.5, -250)
-    MainFrame.Size = UDim2.new(0, 700, 0, 500)
+    MainFrame.Size = UDim2.new(0, 0, 0, 0)
     MainFrame.ClipsDescendants = true
     MainFrame.Active = true
+    MainFrame.BackgroundTransparency = 1
     
     UICorner.CornerRadius = UDim.new(0, 8)
     UICorner.Parent = MainFrame
+    
+    -- Entrance animation
+    local openTween = TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+        Size = UDim2.new(0, 700, 0, 500),
+        BackgroundTransparency = 0
+    })
+    openTween:Play()
     
     -- Topbar
     Topbar.Name = "Topbar"
@@ -85,7 +143,7 @@ function library:CreateWindow(name, theme)
     TopbarCorner.CornerRadius = UDim.new(0, 8)
     TopbarCorner.Parent = Topbar
     
-    -- Title
+    -- Title with glow effect
     TitleLabel.Parent = Topbar
     TitleLabel.BackgroundTransparency = 1
     TitleLabel.Position = UDim2.new(0, 15, 0, 0)
@@ -96,7 +154,20 @@ function library:CreateWindow(name, theme)
     TitleLabel.TextSize = 16
     TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- Minimize button
+    -- Animated title color
+    spawn(function()
+        while wait(3) do
+            TweenService:Create(TitleLabel, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                TextColor3 = theme3
+            }):Play()
+            wait(1.5)
+            TweenService:Create(TitleLabel, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                TextColor3 = Color3.fromRGB(255, 255, 255)
+            }):Play()
+        end
+    end)
+    
+    -- Minimize button with hover animation
     MinimizeBtn.Parent = Topbar
     MinimizeBtn.BackgroundTransparency = 1
     MinimizeBtn.Position = UDim2.new(1, -40, 0, 0)
@@ -106,22 +177,36 @@ function library:CreateWindow(name, theme)
     MinimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     MinimizeBtn.TextSize = 20
     
+    MinimizeBtn.MouseEnter:Connect(function()
+        TweenService:Create(MinimizeBtn, TweenInfo.new(0.2), {TextColor3 = theme3, Rotation = 180}):Play()
+    end)
+    
+    MinimizeBtn.MouseLeave:Connect(function()
+        TweenService:Create(MinimizeBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255), Rotation = 0}):Play()
+    end)
+    
     -- Content frame
     ContentFrame.Parent = MainFrame
     ContentFrame.BackgroundTransparency = 1
     ContentFrame.Position = UDim2.new(0, 0, 0, 40)
     ContentFrame.Size = UDim2.new(1, 0, 1, -40)
     
-    -- Sidebar
+    -- Sidebar with slide-in animation
     Sidebar.Name = "Sidebar"
     Sidebar.Parent = ContentFrame
     Sidebar.BackgroundColor3 = theme2
     Sidebar.BorderSizePixel = 0
-    Sidebar.Position = UDim2.new(0, 10, 0, 10)
+    Sidebar.Position = UDim2.new(0, -150, 0, 10)
     Sidebar.Size = UDim2.new(0, 150, 1, -20)
     
     SidebarCorner.CornerRadius = UDim.new(0, 6)
     SidebarCorner.Parent = Sidebar
+    
+    -- Slide in sidebar
+    wait(0.3)
+    TweenService:Create(Sidebar, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0, 10, 0, 10)
+    }):Play()
     
     -- Tab container
     TabContainer.Parent = Sidebar
@@ -130,21 +215,31 @@ function library:CreateWindow(name, theme)
     TabContainer.Size = UDim2.new(1, 0, 1, 0)
     TabContainer.ScrollBarThickness = 4
     TabContainer.ScrollBarImageColor3 = theme3
+    TabContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
     
     TabLayout.Parent = TabContainer
     TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
     TabLayout.Padding = UDim.new(0, 5)
     
-    -- Main content area
+    -- Update tab canvas size
+    TabLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        TabContainer.CanvasSize = UDim2.new(0, 0, 0, TabLayout.AbsoluteContentSize.Y + 10)
+    end)
+    
+    -- Main content area with fade-in
     MainContent.Name = "MainContent"
     MainContent.Parent = ContentFrame
     MainContent.BackgroundColor3 = theme2
     MainContent.BorderSizePixel = 0
     MainContent.Position = UDim2.new(0, 170, 0, 10)
     MainContent.Size = UDim2.new(1, -180, 1, -20)
+    MainContent.BackgroundTransparency = 1
     
     MainCorner.CornerRadius = UDim.new(0, 6)
     MainCorner.Parent = MainContent
+    
+    wait(0.5)
+    TweenService:Create(MainContent, TweenInfo.new(0.3), {BackgroundTransparency = 0}):Play()
     
     -- Make draggable
     local dragging, dragInput, dragStart, startPos
@@ -180,17 +275,27 @@ function library:CreateWindow(name, theme)
         end
     end)
     
-    -- Minimize functionality
+    -- Minimize functionality with animation
     local minimized = false
     MinimizeBtn.MouseButton1Click:Connect(function()
         minimized = not minimized
         if minimized then
-            ContentFrame.Visible = false
-            MainFrame:TweenSize(UDim2.new(0, 700, 0, 40), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, 0.3, true)
+            TweenService:Create(ContentFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+                Position = UDim2.new(0, 0, 0, 40),
+                Size = UDim2.new(1, 0, 0, 0)
+            }):Play()
+            TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, 700, 0, 40)
+            }):Play()
             MinimizeBtn.Text = "+"
         else
-            ContentFrame.Visible = true
-            MainFrame:TweenSize(UDim2.new(0, 700, 0, 500), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, 0.3, true)
+            TweenService:Create(ContentFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+                Position = UDim2.new(0, 0, 0, 40),
+                Size = UDim2.new(1, 0, 1, -40)
+            }):Play()
+            TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, 700, 0, 500)
+            }):Play()
             MinimizeBtn.Text = "−"
         end
         play("rbxassetid://6895079853")
@@ -204,6 +309,8 @@ function library:CreateWindow(name, theme)
         local TabPage = Instance.new("ScrollingFrame")
         local PageLayout = Instance.new("UIListLayout")
         local PagePadding = Instance.new("UIPadding")
+        local TabHighlight = Instance.new("Frame")
+        local HighlightCorner = Instance.new("UICorner")
         
         -- Tab button
         TabButton.Name = text
@@ -216,9 +323,34 @@ function library:CreateWindow(name, theme)
         TabButton.TextColor3 = Color3.fromRGB(200, 200, 200)
         TabButton.TextSize = 14
         TabButton.AutoButtonColor = false
+        TabButton.ClipsDescendants = true
         
         TabCorner.CornerRadius = UDim.new(0, 5)
         TabCorner.Parent = TabButton
+        
+        -- Highlight bar
+        TabHighlight.Name = "Highlight"
+        TabHighlight.Parent = TabButton
+        TabHighlight.BackgroundColor3 = theme3
+        TabHighlight.BorderSizePixel = 0
+        TabHighlight.Position = UDim2.new(0, -5, 0, 0)
+        TabHighlight.Size = UDim2.new(0, 3, 1, 0)
+        
+        HighlightCorner.CornerRadius = UDim.new(1, 0)
+        HighlightCorner.Parent = TabHighlight
+        
+        -- Hover animation
+        TabButton.MouseEnter:Connect(function()
+            if TabButton.BackgroundColor3 ~= theme3 then
+                TweenService:Create(TabButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(theme1.R * 255 * 1.2, theme1.G * 255 * 1.2, theme1.B * 255 * 1.2)}):Play()
+            end
+        end)
+        
+        TabButton.MouseLeave:Connect(function()
+            if TabButton.BackgroundColor3 ~= theme3 then
+                TweenService:Create(TabButton, TweenInfo.new(0.2), {BackgroundColor3 = theme1}):Play()
+            end
+        end)
         
         -- Tab page
         TabPage.Name = text.."Page"
@@ -246,24 +378,35 @@ function library:CreateWindow(name, theme)
             TabPage.CanvasSize = UDim2.new(0, 0, 0, PageLayout.AbsoluteContentSize.Y + 20)
         end)
         
-        -- Tab switching
+        -- Tab switching with animations
         TabButton.MouseButton1Click:Connect(function()
             for _, page in pairs(MainContent:GetChildren()) do
-                if page:IsA("ScrollingFrame") then
+                if page:IsA("ScrollingFrame") and page.Visible then
+                    TweenService:Create(page, TweenInfo.new(0.2), {ScrollingEnabled = false}):Play()
+                    wait(0.1)
                     page.Visible = false
                 end
             end
             
             for _, btn in pairs(TabContainer:GetChildren()) do
                 if btn:IsA("TextButton") then
-                    btn.BackgroundColor3 = theme1
-                    btn.TextColor3 = Color3.fromRGB(200, 200, 200)
+                    TweenService:Create(btn, TweenInfo.new(0.3), {
+                        BackgroundColor3 = theme1,
+                        TextColor3 = Color3.fromRGB(200, 200, 200)
+                    }):Play()
+                    if btn:FindFirstChild("Highlight") then
+                        TweenService:Create(btn.Highlight, TweenInfo.new(0.3), {Position = UDim2.new(0, -5, 0, 0)}):Play()
+                    end
                 end
             end
             
             TabPage.Visible = true
-            TabButton.BackgroundColor3 = theme3
-            TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+            TabPage.ScrollingEnabled = true
+            TweenService:Create(TabButton, TweenInfo.new(0.3), {
+                BackgroundColor3 = theme3,
+                TextColor3 = Color3.fromRGB(255, 255, 255)
+            }):Play()
+            TweenService:Create(TabHighlight, TweenInfo.new(0.3), {Position = UDim2.new(0, 0, 0, 0)}):Play()
             play("rbxassetid://6895079853")
         end)
         
@@ -287,6 +430,17 @@ function library:CreateWindow(name, theme)
             
             ToggleCorner.CornerRadius = UDim.new(0, 5)
             ToggleCorner.Parent = ToggleFrame
+            
+            -- Hover effect
+            ToggleFrame.MouseEnter:Connect(function()
+                TweenService:Create(ToggleFrame, TweenInfo.new(0.2), {
+                    BackgroundColor3 = Color3.fromRGB(theme1.R * 255 * 1.15, theme1.G * 255 * 1.15, theme1.B * 255 * 1.15)
+                }):Play()
+            end)
+            
+            ToggleFrame.MouseLeave:Connect(function()
+                TweenService:Create(ToggleFrame, TweenInfo.new(0.2), {BackgroundColor3 = theme1}):Play()
+            end)
             
             ToggleLabel.Parent = ToggleFrame
             ToggleLabel.BackgroundTransparency = 1
@@ -325,13 +479,26 @@ function library:CreateWindow(name, theme)
                 pcall(callback, enabled)
                 
                 if enabled then
-                    ToggleButton.BackgroundColor3 = theme3
-                    ToggleIndicator:TweenPosition(UDim2.new(1, -18, 0.5, -8), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true)
-                    ToggleIndicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    TweenService:Create(ToggleButton, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {BackgroundColor3 = theme3}):Play()
+                    TweenService:Create(ToggleIndicator, TweenInfo.new(0.3, Enum.EasingStyle.Back), {
+                        Position = UDim2.new(1, -18, 0.5, -8),
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    }):Play()
+                    
+                    -- Scale animation
+                    TweenService:Create(ToggleButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 44, 0, 22)}):Play()
+                    wait(0.1)
+                    TweenService:Create(ToggleButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 40, 0, 20)}):Play()
                 else
-                    ToggleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-                    ToggleIndicator:TweenPosition(UDim2.new(0, 2, 0.5, -8), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true)
-                    ToggleIndicator.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+                    TweenService:Create(ToggleButton, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {BackgroundColor3 = Color3.fromRGB(30, 30, 30)}):Play()
+                    TweenService:Create(ToggleIndicator, TweenInfo.new(0.3, Enum.EasingStyle.Back), {
+                        Position = UDim2.new(0, 2, 0.5, -8),
+                        BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+                    }):Play()
+                    
+                    TweenService:Create(ToggleButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 36, 0, 18)}):Play()
+                    wait(0.1)
+                    TweenService:Create(ToggleButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 40, 0, 20)}):Play()
                 end
                 
                 play("rbxassetid://6895079853")
@@ -343,6 +510,8 @@ function library:CreateWindow(name, theme)
             
             local ButtonFrame = Instance.new("TextButton")
             local ButtonCorner = Instance.new("UICorner")
+            local ButtonGlow = Instance.new("Frame")
+            local GlowCorner = Instance.new("UICorner")
             
             ButtonFrame.Parent = TabPage
             ButtonFrame.BackgroundColor3 = theme3
@@ -353,14 +522,58 @@ function library:CreateWindow(name, theme)
             ButtonFrame.TextColor3 = Color3.fromRGB(255, 255, 255)
             ButtonFrame.TextSize = 14
             ButtonFrame.AutoButtonColor = false
+            ButtonFrame.ClipsDescendants = true
             
             ButtonCorner.CornerRadius = UDim.new(0, 5)
             ButtonCorner.Parent = ButtonFrame
             
+            -- Glow effect
+            ButtonGlow.Name = "Glow"
+            ButtonGlow.Parent = ButtonFrame
+            ButtonGlow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            ButtonGlow.BackgroundTransparency = 0.7
+            ButtonGlow.BorderSizePixel = 0
+            ButtonGlow.Position = UDim2.new(0, -50, 0, 0)
+            ButtonGlow.Size = UDim2.new(0, 50, 1, 0)
+            
+            GlowCorner.CornerRadius = UDim.new(0, 5)
+            GlowCorner.Parent = ButtonGlow
+            
+            -- Animated glow
+            spawn(function()
+                while ButtonFrame.Parent do
+                    TweenService:Create(ButtonGlow, TweenInfo.new(1.5, Enum.EasingStyle.Linear), {
+                        Position = UDim2.new(1, 0, 0, 0)
+                    }):Play()
+                    wait(1.5)
+                    ButtonGlow.Position = UDim2.new(0, -50, 0, 0)
+                    wait(2)
+                end
+            end)
+            
+            -- Hover animation
+            ButtonFrame.MouseEnter:Connect(function()
+                TweenService:Create(ButtonFrame, TweenInfo.new(0.2), {
+                    BackgroundColor3 = Color3.fromRGB(theme3.R * 255 * 1.2, theme3.G * 255 * 1.2, theme3.B * 255 * 1.2),
+                    Size = UDim2.new(1, -8, 0, 42)
+                }):Play()
+            end)
+            
+            ButtonFrame.MouseLeave:Connect(function()
+                TweenService:Create(ButtonFrame, TweenInfo.new(0.2), {
+                    BackgroundColor3 = theme3,
+                    Size = UDim2.new(1, -10, 0, 40)
+                }):Play()
+            end)
+            
             ButtonFrame.MouseButton1Click:Connect(function()
-                ButtonFrame.BackgroundColor3 = Color3.fromRGB(theme3.R * 255 * 0.8, theme3.G * 255 * 0.8, theme3.B * 255 * 0.8)
+                TweenService:Create(ButtonFrame, TweenInfo.new(0.1), {
+                    Size = UDim2.new(1, -12, 0, 38)
+                }):Play()
                 wait(0.1)
-                ButtonFrame.BackgroundColor3 = theme3
+                TweenService:Create(ButtonFrame, TweenInfo.new(0.1), {
+                    Size = UDim2.new(1, -10, 0, 40)
+                }):Play()
                 pcall(callback)
                 play("rbxassetid://6895079853")
             end)
@@ -380,6 +593,8 @@ function library:CreateWindow(name, theme)
             local SliderFill = Instance.new("Frame")
             local FillCorner = Instance.new("UICorner")
             local SliderButton = Instance.new("TextButton")
+            local SliderDot = Instance.new("Frame")
+            local DotCorner = Instance.new("UICorner")
             
             SliderFrame.Parent = TabPage
             SliderFrame.BackgroundColor3 = theme1
@@ -388,6 +603,17 @@ function library:CreateWindow(name, theme)
             
             SliderCorner.CornerRadius = UDim.new(0, 5)
             SliderCorner.Parent = SliderFrame
+            
+            -- Hover effect
+            SliderFrame.MouseEnter:Connect(function()
+                TweenService:Create(SliderFrame, TweenInfo.new(0.2), {
+                    BackgroundColor3 = Color3.fromRGB(theme1.R * 255 * 1.15, theme1.G * 255 * 1.15, theme1.B * 255 * 1.15)
+                }):Play()
+            end)
+            
+            SliderFrame.MouseLeave:Connect(function()
+                TweenService:Create(SliderFrame, TweenInfo.new(0.2), {BackgroundColor3 = theme1}):Play()
+            end)
             
             SliderLabel.Parent = SliderFrame
             SliderLabel.BackgroundTransparency = 1
@@ -426,10 +652,22 @@ function library:CreateWindow(name, theme)
             FillCorner.CornerRadius = UDim.new(1, 0)
             FillCorner.Parent = SliderFill
             
+            -- Animated slider dot
+            SliderDot.Parent = SliderBar
+            SliderDot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            SliderDot.BorderSizePixel = 0
+            SliderDot.Position = UDim2.new(0, -4, 0.5, -4)
+            SliderDot.Size = UDim2.new(0, 8, 0, 8)
+            SliderDot.ZIndex = 2
+            
+            DotCorner.CornerRadius = UDim.new(1, 0)
+            DotCorner.Parent = SliderDot
+            
             SliderButton.Parent = SliderBar
             SliderButton.BackgroundTransparency = 1
             SliderButton.Size = UDim2.new(1, 0, 1, 0)
             SliderButton.Text = ""
+            SliderButton.ZIndex = 3
             
             local mouse = game.Players.LocalPlayer:GetMouse()
             local uis = game:GetService("UserInputService")
@@ -439,13 +677,28 @@ function library:CreateWindow(name, theme)
                 local moveConnection
                 local releaseConnection
                 
+                -- Scale up dot
+                TweenService:Create(SliderDot, TweenInfo.new(0.2), {Size = UDim2.new(0, 12, 0, 12), Position = UDim2.new(0, -6, 0.5, -6)}):Play()
+                
                 local function update()
                     local relativeX = math.clamp(mouse.X - SliderBar.AbsolutePosition.X, 0, SliderBar.AbsoluteSize.X)
                     local percentage = relativeX / SliderBar.AbsoluteSize.X
                     Value = math.floor(minvalue + (maxvalue - minvalue) * percentage)
                     
-                    SliderFill:TweenSize(UDim2.new(percentage, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.1, true)
+                    TweenService:Create(SliderFill, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {
+                        Size = UDim2.new(percentage, 0, 1, 0)
+                    }):Play()
+                    TweenService:Create(SliderDot, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {
+                        Position = UDim2.new(percentage, -6, 0.5, -6)
+                    }):Play()
+                    
                     SliderValue.Text = tostring(Value)
+                    
+                    -- Pulse animation on value change
+                    TweenService:Create(SliderValue, TweenInfo.new(0.1), {TextSize = 15}):Play()
+                    wait(0.1)
+                    TweenService:Create(SliderValue, TweenInfo.new(0.1), {TextSize = 13}):Play()
+                    
                     pcall(callback, Value)
                 end
                 
@@ -454,6 +707,8 @@ function library:CreateWindow(name, theme)
                 moveConnection = mouse.Move:Connect(update)
                 releaseConnection = uis.InputEnded:Connect(function(input)
                     if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        -- Scale down dot
+                        TweenService:Create(SliderDot, TweenInfo.new(0.2), {Size = UDim2.new(0, 8, 0, 8), Position = UDim2.new(SliderFill.Size.X.Scale, -4, 0.5, -4)}):Play()
                         moveConnection:Disconnect()
                         releaseConnection:Disconnect()
                     end
@@ -461,23 +716,223 @@ function library:CreateWindow(name, theme)
             end)
         end
         
+        function InsideTab:CreateDropdown(text, list, callback)
+            local BodyYSize = 0
+            local IsDropped = false
+            callback = callback or function() end
+            list = list or {}
+            text = text or "Dropdown"
+            
+            local DropdownFrame = Instance.new("Frame")
+            local DropCorner = Instance.new("UICorner")
+            local DropLabel = Instance.new("TextLabel")
+            local DropButton = Instance.new("TextButton")
+            local DropBtnCorner = Instance.new("UICorner")
+            local DropArrow = Instance.new("TextLabel")
+            local DropdownContainer = Instance.new("Frame")
+            local ContainerCorner = Instance.new("UICorner")
+            local DropScroll = Instance.new("ScrollingFrame")
+            local DropLayout = Instance.new("UIListLayout")
+            
+            DropdownFrame.Parent = TabPage
+            DropdownFrame.BackgroundColor3 = theme1
+            DropdownFrame.BorderSizePixel = 0
+            DropdownFrame.Size = UDim2.new(1, -10, 0, 40)
+            
+            DropCorner.CornerRadius = UDim.new(0, 5)
+            DropCorner.Parent = DropdownFrame
+            
+            -- Hover effect
+            DropdownFrame.MouseEnter:Connect(function()
+                TweenService:Create(DropdownFrame, TweenInfo.new(0.2), {
+                    BackgroundColor3 = Color3.fromRGB(theme1.R * 255 * 1.15, theme1.G * 255 * 1.15, theme1.B * 255 * 1.15)
+                }):Play()
+            end)
+            
+            DropdownFrame.MouseLeave:Connect(function()
+                TweenService:Create(DropdownFrame, TweenInfo.new(0.2), {BackgroundColor3 = theme1}):Play()
+            end)
+            
+            DropLabel.Parent = DropdownFrame
+            DropLabel.BackgroundTransparency = 1
+            DropLabel.Position = UDim2.new(0, 12, 0, 0)
+            DropLabel.Size = UDim2.new(1, -60, 1, 0)
+            DropLabel.Font = Enum.Font.Gotham
+            DropLabel.Text = text
+            DropLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            DropLabel.TextSize = 13
+            DropLabel.TextXAlignment = Enum.TextXAlignment.Left
+            
+            DropButton.Parent = DropdownFrame
+            DropButton.BackgroundColor3 = theme2
+            DropButton.BorderSizePixel = 0
+            DropButton.Position = UDim2.new(1, -35, 0.5, -10)
+            DropButton.Size = UDim2.new(0, 25, 0, 20)
+            DropButton.Text = ""
+            DropButton.AutoButtonColor = false
+            
+            DropBtnCorner.CornerRadius = UDim.new(0, 4)
+            DropBtnCorner.Parent = DropButton
+            
+            DropArrow.Parent = DropButton
+            DropArrow.BackgroundTransparency = 1
+            DropArrow.Size = UDim2.new(1, 0, 1, 0)
+            DropArrow.Font = Enum.Font.GothamBold
+            DropArrow.Text = "▼"
+            DropArrow.TextColor3 = Color3.fromRGB(200, 200, 200)
+            DropArrow.TextSize = 10
+            
+            DropdownContainer.Parent = DropdownFrame
+            DropdownContainer.BackgroundColor3 = theme2
+            DropdownContainer.BorderSizePixel = 0
+            DropdownContainer.Position = UDim2.new(0, 0, 1, 5)
+            DropdownContainer.Size = UDim2.new(1, 0, 0, 0)
+            DropdownContainer.Visible = false
+            DropdownContainer.ClipsDescendants = true
+            DropdownContainer.ZIndex = 10
+            
+            ContainerCorner.CornerRadius = UDim.new(0, 5)
+            ContainerCorner.Parent = DropdownContainer
+            
+            DropScroll.Parent = DropdownContainer
+            DropScroll.BackgroundTransparency = 1
+            DropScroll.BorderSizePixel = 0
+            DropScroll.Size = UDim2.new(1, 0, 1, 0)
+            DropScroll.ScrollBarThickness = 4
+            DropScroll.ScrollBarImageColor3 = theme3
+            DropScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+            
+            DropLayout.Parent = DropScroll
+            DropLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            DropLayout.Padding = UDim.new(0, 2)
+            
+            for i, v in pairs(list) do
+                BodyYSize = BodyYSize + 27
+                
+                local OptionButton = Instance.new("TextButton")
+                local OptionCorner = Instance.new("UICorner")
+                
+                OptionButton.Parent = DropScroll
+                OptionButton.BackgroundColor3 = theme1
+                OptionButton.BorderSizePixel = 0
+                OptionButton.Size = UDim2.new(1, -4, 0, 25)
+                OptionButton.Font = Enum.Font.Gotham
+                OptionButton.Text = v
+                OptionButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+                OptionButton.TextSize = 13
+                OptionButton.AutoButtonColor = false
+                
+                OptionCorner.CornerRadius = UDim.new(0, 4)
+                OptionCorner.Parent = OptionButton
+                
+                OptionButton.MouseEnter:Connect(function()
+                    TweenService:Create(OptionButton, TweenInfo.new(0.2), {
+                        BackgroundColor3 = theme3,
+                        TextColor3 = Color3.fromRGB(255, 255, 255)
+                    }):Play()
+                end)
+                
+                OptionButton.MouseLeave:Connect(function()
+                    TweenService:Create(OptionButton, TweenInfo.new(0.2), {
+                        BackgroundColor3 = theme1,
+                        TextColor3 = Color3.fromRGB(255, 255, 255)
+                    }):Play()
+                end)
+                
+                OptionButton.MouseButton1Click:Connect(function()
+                    DropLabel.Text = v
+                    pcall(callback, v)
+                    
+                    -- Close animation
+                    TweenService:Create(DropdownContainer, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                        Size = UDim2.new(1, 0, 0, 0)
+                    }):Play()
+                    TweenService:Create(DropArrow, TweenInfo.new(0.3), {Rotation = 0, TextColor3 = Color3.fromRGB(200, 200, 200)}):Play()
+                    wait(0.3)
+                    DropdownContainer.Visible = false
+                    IsDropped = false
+                    play("rbxassetid://6895079853")
+                end)
+            end
+            
+            DropLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+                DropScroll.CanvasSize = UDim2.new(0, 0, 0, DropLayout.AbsoluteContentSize.Y + 5)
+            end)
+            
+            DropButton.MouseButton1Click:Connect(function()
+                IsDropped = not IsDropped
+                
+                if IsDropped then
+                    DropdownContainer.Visible = true
+                    TweenService:Create(DropdownContainer, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                        Size = UDim2.new(1, 0, 0, math.min(BodyYSize + 5, 150))
+                    }):Play()
+                    TweenService:Create(DropArrow, TweenInfo.new(0.3), {Rotation = 180, TextColor3 = theme3}):Play()
+                else
+                    TweenService:Create(DropdownContainer, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                        Size = UDim2.new(1, 0, 0, 0)
+                    }):Play()
+                    TweenService:Create(DropArrow, TweenInfo.new(0.3), {Rotation = 0, TextColor3 = Color3.fromRGB(200, 200, 200)}):Play()
+                    wait(0.3)
+                    DropdownContainer.Visible = false
+                end
+                
+                play("rbxassetid://178104975")
+            end)
+        end
+        
+        function InsideTab:CreateLabel(text)
+            local LabelFrame = Instance.new("Frame")
+            local LabelCorner = Instance.new("UICorner")
+            local Label = Instance.new("TextLabel")
+            
+            LabelFrame.Parent = TabPage
+            LabelFrame.BackgroundColor3 = theme1
+            LabelFrame.BorderSizePixel = 0
+            LabelFrame.Size = UDim2.new(1, -10, 0, 30)
+            
+            LabelCorner.CornerRadius = UDim.new(0, 5)
+            LabelCorner.Parent = LabelFrame
+            
+            Label.Parent = LabelFrame
+            Label.BackgroundTransparency = 1
+            Label.Size = UDim2.new(1, 0, 1, 0)
+            Label.Font = Enum.Font.GothamBold
+            Label.Text = text
+            Label.TextColor3 = theme3
+            Label.TextSize = 14
+        end
+        
         function InsideTab:Show()
             for _, page in pairs(MainContent:GetChildren()) do
-                if page:IsA("ScrollingFrame") then
+                if page:IsA("ScrollingFrame") and page.Visible then
+                    TweenService:Create(page, TweenInfo.new(0.2), {ScrollingEnabled = false}):Play()
+                    wait(0.1)
                     page.Visible = false
                 end
             end
             
             for _, btn in pairs(TabContainer:GetChildren()) do
                 if btn:IsA("TextButton") then
-                    btn.BackgroundColor3 = theme1
-                    btn.TextColor3 = Color3.fromRGB(200, 200, 200)
+                    TweenService:Create(btn, TweenInfo.new(0.3), {
+                        BackgroundColor3 = theme1,
+                        TextColor3 = Color3.fromRGB(200, 200, 200)
+                    }):Play()
+                    if btn:FindFirstChild("Highlight") then
+                        TweenService:Create(btn.Highlight, TweenInfo.new(0.3), {Position = UDim2.new(0, -5, 0, 0)}):Play()
+                    end
                 end
             end
             
             TabPage.Visible = true
-            TabButton.BackgroundColor3 = theme3
-            TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+            TabPage.ScrollingEnabled = true
+            TweenService:Create(TabButton, TweenInfo.new(0.3), {
+                BackgroundColor3 = theme3,
+                TextColor3 = Color3.fromRGB(255, 255, 255)
+            }):Play()
+            if TabButton:FindFirstChild("Highlight") then
+                TweenService:Create(TabButton.Highlight, TweenInfo.new(0.3), {Position = UDim2.new(0, 0, 0, 0)}):Play()
+            end
         end
         
         return InsideTab
