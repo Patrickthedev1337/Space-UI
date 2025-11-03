@@ -1160,6 +1160,35 @@ end
         return InsideTab
     end
     
+-- Hide/Show functionality with RightShift
+    local hidden = false
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if input.KeyCode == Enum.KeyCode.RightShift and not gameProcessed then
+            hidden = not hidden
+            if hidden then
+                TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+                    Size = UDim2.new(0, 0, 0, 0),
+                    BackgroundTransparency = 1
+                }):Play()
+            else
+                TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(0, 700, 0, minimized and 40 or 500),
+                    BackgroundTransparency = 0
+                }):Play()
+            end
+            play("rbxassetid://6895079853")
+        end
+    end)
+    
+    -- Welcome notification
+    wait(0.8)
+    InsideLibrary:Notify({
+        Title = "Welcome!",
+        Description = "Welcome "..game.Players.LocalPlayer.Name.."! Have fun!\nYou can hide the menu with Right Shift!",
+        Duration = 5,
+        Type = "success"
+    })
+    
     return InsideLibrary
 end
 
