@@ -846,6 +846,456 @@ end
             end)
         end
         
+
+        function InsideTab:CreateColorPicker(text, defaultColor, callback)
+    callback = callback or function() end
+    defaultColor = defaultColor or Color3.fromRGB(255, 255, 255)
+    
+    local ColorPickerFrame = Instance.new("Frame")
+    local ColorPickerCorner = Instance.new("UICorner")
+    local ColorPickerLabel = Instance.new("TextLabel")
+    local ColorPreview = Instance.new("Frame")
+    local PreviewCorner = Instance.new("UICorner")
+    local ColorButton = Instance.new("TextButton")
+    
+    -- Color picker popup
+    local ColorPopup = Instance.new("Frame")
+    local PopupCorner = Instance.new("UICorner")
+    local ColorCanvas = Instance.new("ImageButton")
+    local CanvasCorner = Instance.new("UICorner")
+    local HueBar = Instance.new("ImageButton")
+    local HueBarCorner = Instance.new("UICorner")
+    local HueSelector = Instance.new("Frame")
+    local HueSelectorCorner = Instance.new("UICorner")
+    local CanvasSelector = Instance.new("Frame")
+    local CanvasSelectorCorner = Instance.new("UICorner")
+    local RGBFrame = Instance.new("Frame")
+    local RGBCorner = Instance.new("UICorner")
+    local RLabel = Instance.new("TextLabel")
+    local GLabel = Instance.new("TextLabel")
+    local BLabel = Instance.new("TextLabel")
+    local RInput = Instance.new("TextBox")
+    local GInput = Instance.new("TextBox")
+    local BInput = Instance.new("TextBox")
+    local ConfirmButton = Instance.new("TextButton")
+    local ConfirmCorner = Instance.new("UICorner")
+    
+    ColorPickerFrame.Parent = TabPage
+    ColorPickerFrame.BackgroundColor3 = theme1
+    ColorPickerFrame.BorderSizePixel = 0
+    ColorPickerFrame.Size = UDim2.new(1, -10, 0, 40)
+    
+    ColorPickerCorner.CornerRadius = UDim.new(0, 5)
+    ColorPickerCorner.Parent = ColorPickerFrame
+    
+    -- Hover effect
+    ColorPickerFrame.MouseEnter:Connect(function()
+        TweenService:Create(ColorPickerFrame, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(theme1.R * 255 * 1.15, theme1.G * 255 * 1.15, theme1.B * 255 * 1.15)
+        }):Play()
+    end)
+    
+    ColorPickerFrame.MouseLeave:Connect(function()
+        TweenService:Create(ColorPickerFrame, TweenInfo.new(0.2), {BackgroundColor3 = theme1}):Play()
+    end)
+    
+    ColorPickerLabel.Parent = ColorPickerFrame
+    ColorPickerLabel.BackgroundTransparency = 1
+    ColorPickerLabel.Position = UDim2.new(0, 12, 0, 0)
+    ColorPickerLabel.Size = UDim2.new(1, -70, 1, 0)
+    ColorPickerLabel.Font = Enum.Font.Gotham
+    ColorPickerLabel.Text = text
+    ColorPickerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ColorPickerLabel.TextSize = 13
+    ColorPickerLabel.TextXAlignment = Enum.TextXAlignment.Left
+    
+    ColorPreview.Parent = ColorPickerFrame
+    ColorPreview.BackgroundColor3 = defaultColor
+    ColorPreview.BorderSizePixel = 0
+    ColorPreview.Position = UDim2.new(1, -50, 0.5, -12)
+    ColorPreview.Size = UDim2.new(0, 40, 0, 24)
+    
+    PreviewCorner.CornerRadius = UDim.new(0, 4)
+    PreviewCorner.Parent = ColorPreview
+    
+    ColorButton.Parent = ColorPreview
+    ColorButton.BackgroundTransparency = 1
+    ColorButton.Size = UDim2.new(1, 0, 1, 0)
+    ColorButton.Text = ""
+    ColorButton.ZIndex = 2
+    
+    -- Color Popup (initially hidden)
+    ColorPopup.Name = "ColorPopup"
+    ColorPopup.Parent = Screen
+    ColorPopup.BackgroundColor3 = theme1
+    ColorPopup.BorderSizePixel = 0
+    ColorPopup.Position = UDim2.new(0.5, -150, 0.5, -175)
+    ColorPopup.Size = UDim2.new(0, 300, 0, 350)
+    ColorPopup.Visible = false
+    ColorPopup.ZIndex = 100
+    
+    PopupCorner.CornerRadius = UDim.new(0, 8)
+    PopupCorner.Parent = ColorPopup
+    
+    -- Color Canvas (Saturation/Value)
+    ColorCanvas.Parent = ColorPopup
+    ColorCanvas.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    ColorCanvas.BorderSizePixel = 0
+    ColorCanvas.Position = UDim2.new(0, 15, 0, 15)
+    ColorCanvas.Size = UDim2.new(0, 230, 0, 230)
+    ColorCanvas.AutoButtonColor = false
+    ColorCanvas.Image = "rbxassetid://4155801252"
+    ColorCanvas.ZIndex = 101
+    
+    CanvasCorner.CornerRadius = UDim.new(0, 6)
+    CanvasCorner.Parent = ColorCanvas
+    
+    -- Canvas Selector
+    CanvasSelector.Parent = ColorCanvas
+    CanvasSelector.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    CanvasSelector.BorderSizePixel = 2
+    CanvasSelector.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    CanvasSelector.Position = UDim2.new(1, -5, 0, -5)
+    CanvasSelector.Size = UDim2.new(0, 10, 0, 10)
+    CanvasSelector.ZIndex = 102
+    
+    CanvasSelectorCorner.CornerRadius = UDim.new(1, 0)
+    CanvasSelectorCorner.Parent = CanvasSelector
+    
+    -- Hue Bar
+    HueBar.Parent = ColorPopup
+    HueBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    HueBar.BorderSizePixel = 0
+    HueBar.Position = UDim2.new(0, 255, 0, 15)
+    HueBar.Size = UDim2.new(0, 30, 0, 230)
+    HueBar.AutoButtonColor = false
+    HueBar.Image = "rbxassetid://3641079629"
+    HueBar.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    HueBar.ZIndex = 101
+    
+    HueBarCorner.CornerRadius = UDim.new(0, 6)
+    HueBarCorner.Parent = HueBar
+    
+    -- Hue Selector
+    HueSelector.Parent = HueBar
+    HueSelector.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    HueSelector.BorderSizePixel = 2
+    HueSelector.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    HueSelector.Position = UDim2.new(0, -2, 0, -3)
+    HueSelector.Size = UDim2.new(1, 4, 0, 6)
+    HueSelector.ZIndex = 102
+    
+    HueSelectorCorner.CornerRadius = UDim.new(0, 3)
+    HueSelectorCorner.Parent = HueSelector
+    
+    -- RGB Input Frame
+    RGBFrame.Parent = ColorPopup
+    RGBFrame.BackgroundColor3 = theme2
+    RGBFrame.BorderSizePixel = 0
+    RGBFrame.Position = UDim2.new(0, 15, 0, 255)
+    RGBFrame.Size = UDim2.new(1, -30, 0, 50)
+    RGBFrame.ZIndex = 101
+    
+    RGBCorner.CornerRadius = UDim.new(0, 6)
+    RGBCorner.Parent = RGBFrame
+    
+    -- R Label and Input
+    RLabel.Parent = RGBFrame
+    RLabel.BackgroundTransparency = 1
+    RLabel.Position = UDim2.new(0, 10, 0, 5)
+    RLabel.Size = UDim2.new(0, 20, 0, 18)
+    RLabel.Font = Enum.Font.GothamBold
+    RLabel.Text = "R:"
+    RLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+    RLabel.TextSize = 12
+    RLabel.TextXAlignment = Enum.TextXAlignment.Left
+    RLabel.ZIndex = 102
+    
+    RInput.Parent = RGBFrame
+    RInput.BackgroundColor3 = theme1
+    RInput.BorderSizePixel = 0
+    RInput.Position = UDim2.new(0, 35, 0, 5)
+    RInput.Size = UDim2.new(0, 50, 0, 18)
+    RInput.Font = Enum.Font.Gotham
+    RInput.Text = tostring(math.floor(defaultColor.R * 255))
+    RInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+    RInput.TextSize = 11
+    RInput.ZIndex = 102
+    
+    -- G Label and Input
+    GLabel.Parent = RGBFrame
+    GLabel.BackgroundTransparency = 1
+    GLabel.Position = UDim2.new(0, 10, 0, 27)
+    GLabel.Size = UDim2.new(0, 20, 0, 18)
+    GLabel.Font = Enum.Font.GothamBold
+    GLabel.Text = "G:"
+    GLabel.TextColor3 = Color3.fromRGB(100, 255, 100)
+    GLabel.TextSize = 12
+    GLabel.TextXAlignment = Enum.TextXAlignment.Left
+    GLabel.ZIndex = 102
+    
+    GInput.Parent = RGBFrame
+    GInput.BackgroundColor3 = theme1
+    GInput.BorderSizePixel = 0
+    GInput.Position = UDim2.new(0, 35, 0, 27)
+    GInput.Size = UDim2.new(0, 50, 0, 18)
+    GInput.Font = Enum.Font.Gotham
+    GInput.Text = tostring(math.floor(defaultColor.G * 255))
+    GInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+    GInput.TextSize = 11
+    GInput.ZIndex = 102
+    
+    -- B Label and Input
+    BLabel.Parent = RGBFrame
+    BLabel.BackgroundTransparency = 1
+    BLabel.Position = UDim2.new(0.5, 10, 0, 5)
+    BLabel.Size = UDim2.new(0, 20, 0, 18)
+    BLabel.Font = Enum.Font.GothamBold
+    BLabel.Text = "B:"
+    BLabel.TextColor3 = Color3.fromRGB(100, 100, 255)
+    BLabel.TextSize = 12
+    BLabel.TextXAlignment = Enum.TextXAlignment.Left
+    BLabel.ZIndex = 102
+    
+    BInput.Parent = RGBFrame
+    BInput.BackgroundColor3 = theme1
+    BInput.BorderSizePixel = 0
+    BInput.Position = UDim2.new(0.5, 35, 0, 5)
+    BInput.Size = UDim2.new(0, 50, 0, 18)
+    BInput.Font = Enum.Font.Gotham
+    BInput.Text = tostring(math.floor(defaultColor.B * 255))
+    BInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+    BInput.TextSize = 11
+    BInput.ZIndex = 102
+    
+    -- Confirm Button
+    ConfirmButton.Parent = RGBFrame
+    ConfirmButton.BackgroundColor3 = theme3
+    ConfirmButton.BorderSizePixel = 0
+    ConfirmButton.Position = UDim2.new(0.5, 35, 0, 27)
+    ConfirmButton.Size = UDim2.new(0, 110, 0, 18)
+    ConfirmButton.Font = Enum.Font.GothamBold
+    ConfirmButton.Text = "Confirm"
+    ConfirmButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ConfirmButton.TextSize = 11
+    ConfirmButton.AutoButtonColor = false
+    ConfirmButton.ZIndex = 102
+    
+    ConfirmCorner.CornerRadius = UDim.new(0, 4)
+    ConfirmCorner.Parent = ConfirmButton
+    
+    -- Color Logic
+    local currentColor = defaultColor
+    local hue, sat, val = 0, 1, 1
+    
+    -- Convert RGB to HSV
+    local function rgbToHsv(color)
+        local r, g, b = color.R, color.G, color.B
+        local max = math.max(r, g, b)
+        local min = math.min(r, g, b)
+        local delta = max - min
+        
+        local h, s, v = 0, 0, max
+        
+        if delta > 0 then
+            s = delta / max
+            
+            if max == r then
+                h = ((g - b) / delta) % 6
+            elseif max == g then
+                h = (b - r) / delta + 2
+            else
+                h = (r - g) / delta + 4
+            end
+            
+            h = h / 6
+        end
+        
+        return h, s, v
+    end
+    
+    -- Convert HSV to RGB
+    local function hsvToRgb(h, s, v)
+        local c = v * s
+        local x = c * (1 - math.abs((h * 6) % 2 - 1))
+        local m = v - c
+        
+        local r, g, b
+        
+        if h < 1/6 then
+            r, g, b = c, x, 0
+        elseif h < 2/6 then
+            r, g, b = x, c, 0
+        elseif h < 3/6 then
+            r, g, b = 0, c, x
+        elseif h < 4/6 then
+            r, g, b = 0, x, c
+        elseif h < 5/6 then
+            r, g, b = x, 0, c
+        else
+            r, g, b = c, 0, x
+        end
+        
+        return Color3.new(r + m, g + m, b + m)
+    end
+    
+    -- Initialize HSV from default color
+    hue, sat, val = rgbToHsv(defaultColor)
+    
+    -- Update color display
+    local function updateColor()
+        currentColor = hsvToRgb(hue, sat, val)
+        ColorPreview.BackgroundColor3 = currentColor
+        ColorCanvas.BackgroundColor3 = hsvToRgb(hue, 1, 1)
+        
+        RInput.Text = tostring(math.floor(currentColor.R * 255))
+        GInput.Text = tostring(math.floor(currentColor.G * 255))
+        BInput.Text = tostring(math.floor(currentColor.B * 255))
+        
+        pcall(callback, currentColor)
+    end
+    
+    -- Canvas dragging
+    local canvasDragging = false
+    ColorCanvas.MouseButton1Down:Connect(function()
+        canvasDragging = true
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            canvasDragging = false
+        end
+    end)
+    
+    ColorCanvas.MouseMoved:Connect(function(x, y)
+        if canvasDragging then
+            local relX = math.clamp(x - ColorCanvas.AbsolutePosition.X, 0, ColorCanvas.AbsoluteSize.X)
+            local relY = math.clamp(y - ColorCanvas.AbsolutePosition.Y, 0, ColorCanvas.AbsoluteSize.Y)
+            
+            sat = relX / ColorCanvas.AbsoluteSize.X
+            val = 1 - (relY / ColorCanvas.AbsoluteSize.Y)
+            
+            CanvasSelector.Position = UDim2.new(sat, -5, 1 - val, -5)
+            updateColor()
+        end
+    end)
+    
+    ColorCanvas.MouseButton1Click:Connect(function(x, y)
+        local relX = math.clamp(x - ColorCanvas.AbsolutePosition.X, 0, ColorCanvas.AbsoluteSize.X)
+        local relY = math.clamp(y - ColorCanvas.AbsolutePosition.Y, 0, ColorCanvas.AbsoluteSize.Y)
+        
+        sat = relX / ColorCanvas.AbsoluteSize.X
+        val = 1 - (relY / ColorCanvas.AbsoluteSize.Y)
+        
+        CanvasSelector.Position = UDim2.new(sat, -5, 1 - val, -5)
+        updateColor()
+    end)
+    
+    -- Hue bar dragging
+    local hueDragging = false
+    HueBar.MouseButton1Down:Connect(function()
+        hueDragging = true
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            hueDragging = false
+        end
+    end)
+    
+    HueBar.MouseMoved:Connect(function(x, y)
+        if hueDragging then
+            local relY = math.clamp(y - HueBar.AbsolutePosition.Y, 0, HueBar.AbsoluteSize.Y)
+            hue = relY / HueBar.AbsoluteSize.Y
+            
+            HueSelector.Position = UDim2.new(0, -2, relY / HueBar.AbsoluteSize.Y, -3)
+            updateColor()
+        end
+    end)
+    
+    HueBar.MouseButton1Click:Connect(function(x, y)
+        local relY = math.clamp(y - HueBar.AbsolutePosition.Y, 0, HueBar.AbsoluteSize.Y)
+        hue = relY / HueBar.AbsoluteSize.Y
+        
+        HueSelector.Position = UDim2.new(0, -2, relY / HueBar.AbsoluteSize.Y, -3)
+        updateColor()
+    end)
+    
+    -- RGB Input handling
+    local function handleRGBInput()
+        local r = tonumber(RInput.Text) or 0
+        local g = tonumber(GInput.Text) or 0
+        local b = tonumber(BInput.Text) or 0
+        
+        r = math.clamp(r, 0, 255)
+        g = math.clamp(g, 0, 255)
+        b = math.clamp(b, 0, 255)
+        
+        currentColor = Color3.fromRGB(r, g, b)
+        hue, sat, val = rgbToHsv(currentColor)
+        
+        ColorPreview.BackgroundColor3 = currentColor
+        ColorCanvas.BackgroundColor3 = hsvToRgb(hue, 1, 1)
+        CanvasSelector.Position = UDim2.new(sat, -5, 1 - val, -5)
+        HueSelector.Position = UDim2.new(0, -2, hue, -3)
+        
+        pcall(callback, currentColor)
+    end
+    
+    RInput.FocusLost:Connect(handleRGBInput)
+    GInput.FocusLost:Connect(handleRGBInput)
+    BInput.FocusLost:Connect(handleRGBInput)
+    
+    -- Toggle popup
+    ColorButton.MouseButton1Click:Connect(function()
+        ColorPopup.Visible = not ColorPopup.Visible
+        
+        if ColorPopup.Visible then
+            ColorPopup.Size = UDim2.new(0, 0, 0, 0)
+            TweenService:Create(ColorPopup, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, 300, 0, 350)
+            }):Play()
+        end
+        
+        play("rbxassetid://6895079853")
+    end)
+    
+    -- Confirm button
+    ConfirmButton.MouseButton1Click:Connect(function()
+        TweenService:Create(ColorPopup, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+            Size = UDim2.new(0, 0, 0, 0)
+        }):Play()
+        wait(0.2)
+        ColorPopup.Visible = false
+        play("rbxassetid://6895079853")
+    end)
+    
+    ConfirmButton.MouseEnter:Connect(function()
+        TweenService:Create(ConfirmButton, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(theme3.R * 255 * 1.2, theme3.G * 255 * 1.2, theme3.B * 255 * 1.2)
+        }):Play()
+    end)
+    
+    ConfirmButton.MouseLeave:Connect(function()
+        TweenService:Create(ConfirmButton, TweenInfo.new(0.2), {BackgroundColor3 = theme3}):Play()
+    end)
+    
+    -- Return methods
+    return {
+        SetColor = function(self, newColor)
+            currentColor = newColor
+            hue, sat, val = rgbToHsv(newColor)
+            updateColor()
+            CanvasSelector.Position = UDim2.new(sat, -5, 1 - val, -5)
+            HueSelector.Position = UDim2.new(0, -2, hue, -3)
+        end,
+        
+        GetColor = function(self)
+            return currentColor
+        end
+    }
+end
+
         function InsideTab:CreateKeybind(text, defaultKey, callback)
             callback = callback or function() end
             defaultKey = defaultKey or Enum.KeyCode.E
