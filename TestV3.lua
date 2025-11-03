@@ -354,7 +354,7 @@ function library:CreateWindow(name, theme)
         NotifFrame.ClipsDescendants = true
         NotifFrame.Position = UDim2.new(1, 50, 0, 0)
         NotifFrame.BackgroundTransparency = 1
-        NotifFrame.ZIndex = 15  -- ADD THIS LINE (higher than watermark's ZIndex of 10)
+        NotifFrame.ZIndex = 15 
         
         NotifCorner.CornerRadius = UDim.new(0, 6)
         NotifCorner.Parent = NotifFrame
@@ -411,7 +411,7 @@ function library:CreateWindow(name, theme)
         CloseBtn.Position = UDim2.new(1, -30, 0, 5)
         CloseBtn.Size = UDim2.new(0, 25, 0, 25)
         CloseBtn.Font = Enum.Font.GothamBold
-        CloseBtn.Text = "✕"
+        CloseBtn.Text = "X"
         CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
         CloseBtn.TextSize = 14
         
