@@ -930,7 +930,7 @@ end
     ColorPopup.BackgroundColor3 = theme1
     ColorPopup.BorderSizePixel = 0
     ColorPopup.Position = UDim2.new(0.5, -150, 0.5, -175)
-    ColorPopup.Size = UDim2.new(0, 300, 0, 350)
+    ColorPopup.Size = UDim2.new(0, 300, 0, 320)  -- Changed from 350 to 320
     ColorPopup.Visible = false
     ColorPopup.ZIndex = 100
     
@@ -988,14 +988,14 @@ end
     HueSelectorCorner.CornerRadius = UDim.new(0, 3)
     HueSelectorCorner.Parent = HueSelector
     
-    -- RGB Input Frame
+
     RGBFrame.Parent = ColorPopup
     RGBFrame.BackgroundColor3 = theme2
     RGBFrame.BorderSizePixel = 0
     RGBFrame.Position = UDim2.new(0, 15, 0, 255)
-    RGBFrame.Size = UDim2.new(1, -30, 0, 50)
+    RGBFrame.Size = UDim2.new(1, -30, 0, 55)  -- Changed from 50 to 55 for better spacing
     RGBFrame.ZIndex = 101
-    
+
     RGBCorner.CornerRadius = UDim.new(0, 6)
     RGBCorner.Parent = RGBFrame
     
@@ -1156,31 +1156,20 @@ end
     end
     
     -- Canvas dragging
-    local canvasDragging = false
-    ColorCanvas.MouseButton1Down:Connect(function()
-        canvasDragging = true
-    end)
-    
-    UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            canvasDragging = false
-        end
-    end)
-    
-    ColorCanvas.MouseMoved:Connect(function(x, y)
-        if canvasDragging then
-            local relX = math.clamp(x - ColorCanvas.AbsolutePosition.X, 0, ColorCanvas.AbsoluteSize.X)
-            local relY = math.clamp(y - ColorCanvas.AbsolutePosition.Y, 0, ColorCanvas.AbsoluteSize.Y)
-            
-            sat = relX / ColorCanvas.AbsoluteSize.X
-            val = 1 - (relY / ColorCanvas.AbsoluteSize.Y)
-            
-            CanvasSelector.Position = UDim2.new(sat, -5, 1 - val, -5)
-            updateColor()
-        end
-    end)
-    
-    ColorCanvas.MouseButton1Click:Connect(function(x, y)
+    -- Canvas dragging
+local canvasDragging = false
+ColorCanvas.MouseButton1Down:Connect(function()
+    canvasDragging = true
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        canvasDragging = false
+    end
+end)
+
+ColorCanvas.MouseMoved:Connect(function(x, y)
+    if canvasDragging then
         local relX = math.clamp(x - ColorCanvas.AbsolutePosition.X, 0, ColorCanvas.AbsoluteSize.X)
         local relY = math.clamp(y - ColorCanvas.AbsolutePosition.Y, 0, ColorCanvas.AbsoluteSize.Y)
         
@@ -1189,38 +1178,49 @@ end
         
         CanvasSelector.Position = UDim2.new(sat, -5, 1 - val, -5)
         updateColor()
-    end)
+    end
+end)
+
+ColorCanvas.MouseButton1Click:Connect(function(x, y)
+    local relX = math.clamp(x - ColorCanvas.AbsolutePosition.X, 0, ColorCanvas.AbsoluteSize.X)
+    local relY = math.clamp(y - ColorCanvas.AbsolutePosition.Y, 0, ColorCanvas.AbsoluteSize.Y)
     
-    -- Hue bar dragging
-    local hueDragging = false
-    HueBar.MouseButton1Down:Connect(function()
-        hueDragging = true
-    end)
+    sat = relX / ColorCanvas.AbsoluteSize.X
+    val = 1 - (relY / ColorCanvas.AbsoluteSize.Y)
     
-    UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            hueDragging = false
-        end
-    end)
-    
-    HueBar.MouseMoved:Connect(function(x, y)
-        if hueDragging then
-            local relY = math.clamp(y - HueBar.AbsolutePosition.Y, 0, HueBar.AbsoluteSize.Y)
-            hue = relY / HueBar.AbsoluteSize.Y
-            
-            HueSelector.Position = UDim2.new(0, -2, relY / HueBar.AbsoluteSize.Y, -3)
-            updateColor()
-        end
-    end)
-    
-    HueBar.MouseButton1Click:Connect(function(x, y)
+    CanvasSelector.Position = UDim2.new(sat, -5, 1 - val, -5)
+    updateColor()
+end)
+
+-- Hue bar dragging
+local hueDragging = false
+HueBar.MouseButton1Down:Connect(function()
+    hueDragging = true
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        hueDragging = false
+    end
+end)
+
+HueBar.MouseMoved:Connect(function(x, y)
+    if hueDragging then
         local relY = math.clamp(y - HueBar.AbsolutePosition.Y, 0, HueBar.AbsoluteSize.Y)
         hue = relY / HueBar.AbsoluteSize.Y
         
-        HueSelector.Position = UDim2.new(0, -2, relY / HueBar.AbsoluteSize.Y, -3)
+        HueSelector.Position = UDim2.new(0, -2, hue, -3)
         updateColor()
-    end)
+    end
+end)
+
+HueBar.MouseButton1Click:Connect(function(x, y)
+    local relY = math.clamp(y - HueBar.AbsolutePosition.Y, 0, HueBar.AbsoluteSize.Y)
+    hue = relY / HueBar.AbsoluteSize.Y
     
+    HueSelector.Position = UDim2.new(0, -2, hue, -3)
+    updateColor()
+end)
     -- RGB Input handling
     local function handleRGBInput()
         local r = tonumber(RInput.Text) or 0
@@ -1249,16 +1249,16 @@ end
     -- Toggle popup
     ColorButton.MouseButton1Click:Connect(function()
         ColorPopup.Visible = not ColorPopup.Visible
-        
+    
         if ColorPopup.Visible then
             ColorPopup.Size = UDim2.new(0, 0, 0, 0)
             TweenService:Create(ColorPopup, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-                Size = UDim2.new(0, 300, 0, 350)
+                Size = UDim2.new(0, 300, 0, 320)  -- Changed from 350 to 320
             }):Play()
         end
-        
-        play("rbxassetid://6895079853")
-    end)
+    
+    play("rbxassetid://6895079853")
+end)
     
     -- Confirm button
     ConfirmButton.MouseButton1Click:Connect(function()
